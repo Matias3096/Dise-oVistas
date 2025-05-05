@@ -60,8 +60,8 @@
     <label>Celular del Cliente</label>
     <input type="tel" id="celular" required>
 
-    <label>Fecha de Inicio del Convenio</label>
-    <input type="date" id="fechaInicio" required>
+    <label>Fecha de Firma del Convenio</label>
+    <input type="date" id="fechaFirma" required>
 
     <button type="submit">Firmar Convenio</button>
   </form>
@@ -80,20 +80,4 @@
       const nombre = document.getElementById("nombre").value;
       const email = document.getElementById("email").value;
       const celular = document.getElementById("celular").value;
-      const fechaInicio = document.getElementById("fechaInicio").value;
-
-      const datos = `
-        Número: ${nroConvenio}<br>
-        Cliente: ${nombre} (${cuit})<br>
-        Email: ${email} - Celular: ${celular}<br>
-        Fecha de inicio: ${fechaInicio}
-      `;
-
-      document.getElementById("datosConvenio").innerHTML = datos;
-      document.getElementById("resultado").style.display = "block";
-      this.reset();
-    });
-  </script>
-
-</body>
-</html>
+      const fecha
