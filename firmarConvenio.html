@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Firma de Convenio</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 2rem;
+      background-color: #f2f2f2;
+    }
+    h1 {
+      color: #333;
+    }
+    form {
+      background-color: white;
+      padding: 2rem;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: auto;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    input, label, button {
+      display: block;
+      width: 100%;
+      margin-bottom: 1rem;
+    }
+    button {
+      padding: 0.5rem;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .resultado {
+      margin-top: 2rem;
+      background-color: #dff0d8;
+      padding: 1rem;
+      border-radius: 5px;
+      color: #3c763d;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>Firma de Convenio</h1>
+  <form id="firmaConvenioForm">
+    <label>Número de Convenio</label>
+    <input type="text" id="nroConvenio" required>
+
+    <label>CUIT del Cliente</label>
+    <input type="text" id="cuit" required>
+
+    <label>Nombre del Cliente</label>
+    <input type="text" id="nombre" required>
+
+    <label>Email del Cliente</label>
+    <input type="email" id="email" required>
+
+    <label>Celular del Cliente</label>
+    <input type="tel" id="celular" required>
+
+    <label>Fecha de Inicio del Convenio</label>
+    <input type="date" id="fechaInicio" required>
+
+    <button type="submit">Firmar Convenio</button>
+  </form>
+
+  <div class="resultado" id="resultado" style="display:none;">
+    <strong>Convenio firmado correctamente.</strong><br>
+    <span id="datosConvenio"></span>
+  </div>
+
+  <script>
+    document.getElementById("firmaConvenioForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const nroConvenio = document.getElementById("nroConvenio").value;
+      const cuit = document.getElementById("cuit").value;
+      const nombre = document.getElementById("nombre").value;
+      const email = document.getElementById("email").value;
+      const celular = document.getElementById("celular").value;
+      const fechaInicio = document.getElementById("fechaInicio").value;
+
+      const datos = `
+        Número: ${nroConvenio}<br>
+        Cliente: ${nombre} (${cuit})<br>
+        Email: ${email} - Celular: ${celular}<br>
+        Fecha de inicio: ${fechaInicio}
+      `;
+
+      document.getElementById("datosConvenio").innerHTML = datos;
+      document.getElementById("resultado").style.display = "block";
+      this.reset();
+    });
+  </script>
+
+</body>
+</html>
