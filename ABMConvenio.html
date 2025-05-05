@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ABM Convenios</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+      background: #f7f7f7;
+    }
+    h1 {
+      color: #333;
+    }
+    form, table {
+      background: white;
+      padding: 20px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    input, button {
+      padding: 8px;
+      margin: 5px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+    }
+    .actions button {
+      margin-right: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Gestión de Convenios</h1>
+  <form id="formulario">
+    <h2>Datos del Cliente</h2>
+    <input type="text" id="cuit" placeholder="CUIT" required>
+    <input type="text" id="nombre" placeholder="Nombre" required>
+    <input type="email" id="email" placeholder="Email" required>
+    <input type="text" id="celular" placeholder="Celular" required>
+
+    <h2>Datos del Convenio</h2>
+    <input type="text" id="numeroConvenio" placeholder="Nro Convenio" required>
+    <input type="date" id="fechaInicio" required>
+    <input type="date" id="fechaCaducidad" required>
+
+    <button type="submit">Guardar Convenio</button>
+  </form>
+
+  <table id="tablaConvenios">
+    <thead>
+      <tr>
+        <th>CUIT</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Celular</th>
+        <th>Nro Convenio</th>
+        <th>Inicio</th>
+        <th>Caducidad</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody></tbody>
+  </table>
+
+  <script>
+    const formulario = document.getElementById("formulario");
+    const tabla = document.querySelector("#tablaConvenios tbody");
+
+    let convenios = JSON.parse(localStorage.getItem("convenios")) || [];
+
+    function renderTabla() {
+      tabla.innerHTML = "";
+      convenios.forEach((c, i) => {
+        const fila = document.createElement("tr");
+        fila.innerHTML = `
+          <td>${c.cuit}</td>
+          <td>${c.nombre}</td>
+          <td>${c.email}</td>
+          <td>${c.celular}</td>
+          <td>${c.numeroConvenio}</td>
+          <td>${c.fechaInicio}</td>
+          <td>${c.fechaCaducidad}</td>
+          <td class="actions">
+            <button onclick="editarConvenio(${i})">Editar</button>
+            <button onclick="eliminarConvenio(${i})">Eliminar</button>
+          </td>
+        `;
+        tabla.appendChild(fila);
+      });
+    }
+
+    function guardarConvenio(e) {
+      e.preventDefault();
+
+      const c = {
+        cuit: cuit.value,
+        nombre: nombre.value,
+        email: email.value,
+        celular: celular.value,
+        numeroConvenio: numeroConvenio.value,
+        fechaInicio: fechaInicio.value,
+        fechaCaducidad: fechaCaducidad.value
+      };
+
+      convenios.push(c);
+      localStorage.setItem("convenios", JSON.stringify(convenios));
+      formulario.reset();
+      renderTabla();
+    }
+
+    function eliminarConvenio(index) {
+      if (confirm("¿Estás seguro de eliminar este convenio?")) {
+        convenios.splice(index, 1);
+        localStorage.setItem("convenios", JSON.stringify(convenios));
+        renderTabla();
+      }
+    }
+
+    function editarConvenio(index) {
+      const c = convenios[index];
+      cuit.value = c.cuit;
+      nombre.value = c.nombre;
+      email.value = c.email;
+      celular.value = c.celular;
+      numeroConvenio.value = c.numeroConvenio;
+      fechaInicio.value = c.fechaInicio;
+      fechaCaducidad.value = c.fechaCaducidad;
+
+      convenios.splice(index, 1);
+      localStorage.setItem("convenios", JSON.stringify(convenios));
+      renderTabla();
+    }
+
+    formulario.addEventListener("submit", guardarConvenio);
+    renderTabla();
+  </script>
+</body>
+</html>
