@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solicitar Servicio de Consultoría</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 800px;
+            margin-top: 30px;
+            margin-bottom: 50px;
+        }
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card-header {
+            background-color: #2c3e50;
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+        }
+        .btn-primary {
+            background-color: #2c3e50;
+            border-color: #2c3e50;
+        }
+        .btn-primary:hover {
+            background-color: #1a252f;
+            border-color: #1a252f;
+        }
+        .required-field::after {
+            content: " *";
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0">Solicitar Servicio de Consultoría</h4>
+            </div>
+            <div class="card-body">
+                <form id="solicitudServicioForm">
+                    <!-- Paso 1: Datos del Cliente -->
+                    <div class="mb-4" id="paso1">
+                        <h5 class="mb-3">1. Identificación del Cliente</h5>
+                        <div class="mb-3">
+                            <label for="nroCliente" class="form-label required-field">Número de Cliente</label>
+                            <input type="text" class="form-control" id="nroCliente" name="nroCliente" required>
+                            <div class="invalid-feedback">Por favor ingrese su número de cliente.</div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-primary" onclick="validarCliente()">Continuar</button>
+                        </div>
+                    </div>
+
+                    <!-- Paso 2: Selección de Convenio -->
+                    <div class="mb-4 d-none" id="paso2">
+                        <h5 class="mb-3">2. Selección de Convenio</h5>
+                        <div class="mb-3">
+                            <label for="convenio" class="form-label required-field">Convenio Vigente</label>
+                            <select class="form-select" id="convenio" name="convenio" required>
+                                <option value="" selected disabled>Seleccione un convenio</option>
+                                <!-- Opciones se llenarán dinámicamente -->
+                            </select>
+                            <div class="invalid-feedback">Por favor seleccione un convenio.</div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" onclick="volverPaso(1)">Atrás</button>
+                            <button type="button" class="btn btn-primary" onclick="validarConvenio()">Continuar</button>
+                        </div>
+                    </div>
+
+                    <!-- Paso 3: Tipo de Servicio -->
+                    <div class="mb-4 d-none" id="paso3">
+                        <h5 class="mb-3">3. Tipo de Servicio</h5>
+                        <div class="mb-3">
+                            <label for="nombreSolicitud" class="form-label required-field">Nombre del Servicio</label>
+                            <input type="text" class="form-control" id="nombreSolicitud" name="nombreSolicitud" required>
+                            <div class="invalid-feedback">Por favor ingrese un nombre para el servicio.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="tipoServicio" class="form-label required-field">Tipo de Servicio</label>
+                            <select class="form-select" id="tipoServicio" name="tipoServicio" required>
+                                <option value="" selected disabled>Seleccione un tipo de servicio</option>
+                                <!-- Opciones se llenarán dinámicamente -->
+                            </select>
+                            <div class="invalid-feedback">Por favor seleccione un tipo de servicio.</div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" onclick="volverPaso(2)">Atrás</button>
+                            <button type="button" class="btn btn-primary" onclick="validarTipoServicio()">Continuar</button>
+                        </div>
+                    </div>
+
+                    <!-- Paso 4: Detalles del Servicio -->
+                    <div class="mb-4 d-none" id="paso4">
+                        <h5 class="mb-3">4. Detalles del Servicio</h5>
+                        <div class="mb-3">
+                            <label for="descripcionSolicitud" class="form-label required-field">Descripción del Servicio</label>
+                            <textarea class="form-control" id="descripcionSolicitud" name="descripcionSolicitud" rows="3" required></textarea>
+                            <div class="invalid-feedback">Por favor ingrese una descripción del servicio.</div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" onclick="volverPaso(3)">Atrás</button>
+                            <button type="button" class="btn btn-primary" onclick="validarDescripcion()">Continuar</button>
+                        </div>
+                    </div>
+
+                    <!-- Paso 5: Fecha y Horas -->
+                    <div class="mb-4 d-none" id="paso5">
+                        <h5 class="mb-3">5. Programación y Horas</h5>
+                        <div class="mb-3">
+                            <label for="anioMes" class="form-label required-field">Mes y Año del Servicio</label>
+                            <input type="month" class="form-control" id="anioMes" name="anioMes" required>
+                            <div class="invalid-feedback">Por favor seleccione un mes y año válidos.</div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="cantHorasSolicitadas" class="form-label required-field">Horas Solicitadas</label>
+                            <input type="number" class="form-control" id="cantHorasSolicitadas" name="cantHorasSolicitadas" min="1" required>
+                            <div class="invalid-feedback">Por favor ingrese un número válido de horas.</div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" onclick="volverPaso(4)">Atrás</button>
+                            <button type="button" class="btn btn-primary" onclick="validarHoras()">Continuar</button>
+                        </div>
+                    </div>
+
+                    <!-- Paso 6: Confirmación -->
+                    <div class="mb-4 d-none" id="paso6">
+                        <h5 class="mb-3">6. Confirmación de Solicitud</h5>
+                        <div class="card mb-3">
+                            <div class="card-body">
+                                <h6>Resumen de la Solicitud</h6>
+                                <div id="resumenSolicitud"></div>
+                            </div>
+                        </div>
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="confirmacion" required>
+                            <label class="form-check-label" for="confirmacion">
+                                Confirmo que la información proporcionada es correcta y acepto los términos del convenio.
+                            </label>
+                            <div class="invalid-feedback">Debe confirmar para continuar.</div>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" onclick="volverPaso(5)">Atrás</button>
+                            <button type="submit" class="btn btn-success">Enviar Solicitud</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Éxito -->
+    <div class="modal fade" id="exitoModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title">Solicitud Enviada</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Su solicitud de servicio ha sido enviada con éxito.</p>
+                    <p>Número de solicitud: <strong id="numeroSolicitud"></strong></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="location.reload()">Nueva Solicitud</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Variables para almacenar datos entre pasos
+        let datosSolicitud = {
+            nroCliente: null,
+            convenio: null,
+            tipoServicio: null,
+            nombreSolicitud: null,
+            descripcionSolicitud: null,
+            anioMes: null,
+            cantHorasSolicitadas: null
+        };
+
+        // Función para validar el cliente
+        function validarCliente() {
+            const nroCliente = document.getElementById('nroCliente').value;
+            if (!nroCliente) {
+                document.getElementById('nroCliente').classList.add('is-invalid');
+                return;
+            }
+
+            // Simulación de validación con el servidor
+            // En una implementación real, aquí haríamos una llamada AJAX
+            datosSolicitud.nroCliente = nroCliente;
+            
+            // Simular carga de convenios (en realidad vendría de una API)
+            cargarConvenios(nroCliente);
+            
+            // Mostrar siguiente paso
+            document.getElementById('paso1').classList.add('d-none');
+            document.getElementById('paso2').classList.remove('d-none');
+        }
+
+        // Función para cargar convenios (simulada)
+        function cargarConvenios(nroCliente) {
+            const selectConvenio = document.getElementById('convenio');
+            selectConvenio.innerHTML = '<option value="" selected disabled>Seleccione un convenio</option>';
+            
+            // Datos simulados - en realidad vendrían de una API
+            const conveniosSimulados = [
+                { id: 1, nombre: "Proyecto Sistema de Gestión - Convenio 2025-2027" },
+                { id: 2, nombre: "Proyecto Transformación Digital - Convenio 2024-2026" }
+            ];
+            
+            conveniosSimulados.forEach(convenio => {
+                const option = document.createElement('option');
+                option.value = convenio.id;
+                option.textContent = convenio.nombre;
+                selectConvenio.appendChild(option);
+            });
+        }
+
+        // Función para validar el convenio
+        function validarConvenio() {
+            const convenio = document.getElementById('convenio').value;
+            if (!convenio) {
+                document.getElementById('convenio').classList.add('is-invalid');
+                return;
+            }
+
+            datosSolicitud.convenio = convenio;
+            
+            // Simular carga de tipos de servicio (en realidad vendría de una API)
+            cargarTiposServicio(convenio);
+            
+            // Mostrar siguiente paso
+            document.getElementById('paso2').classList.add('d-none');
+            document.getElementById('paso3').classList.remove('d-none');
+        }
+
+        // Función para cargar tipos de servicio (simulada)
+        function cargarTiposServicio(convenioId) {
+            const selectTipoServicio = document.getElementById('tipoServicio');
+            selectTipoServicio.innerHTML = '<option value="" selected disabled>Seleccione un tipo de servicio</option>';
+            
+            // Datos simulados - en realidad vendrían de una API
+            const tiposServicioSimulados = [
+                { id: 1, nombre: "Consultoría Estratégica" },
+                { id: 2, nombre: "Desarrollo de Software" },
+                { id: 3, nombre: "Análisis de Datos" },
+                { id: 4, nombre: "Capacitación" }
+            ];
+            
+            tiposServicioSimulados.forEach(tipo => {
+                const option = document.createElement('option');
+                option.value = tipo.id;
+                option.textContent = tipo.nombre;
+                selectTipoServicio.appendChild(option);
+            });
+        }
+
+        // Función para validar tipo de servicio
+        function validarTipoServicio() {
+            const nombreSolicitud = document.getElementById('nombreSolicitud').value;
+            const tipoServicio = document.getElementById('tipoServicio').value;
+            
+            if (!nombreSolicitud) {
+                document.getElementById('nombreSolicitud').classList.add('is-invalid');
+                return;
+            }
+            
+            if (!tipoServicio) {
+                document.getElementById('tipoServicio').classList.add('is-invalid');
+                return;
+            }
+
+            datosSolicitud.nombreSolicitud = nombreSolicitud;
+            datosSolicitud.tipoServicio = tipoServicio;
+            
+            // Mostrar siguiente paso
+            document.getElementById('paso3').classList.add('d-none');
+            document.getElementById('paso4').classList.remove('d-none');
+        }
+
+        // Función para validar descripción
+        function validarDescripcion() {
+            const descripcionSolicitud = document.getElementById('descripcionSolicitud').value;
+            if (!descripcionSolicitud) {
+                document.getElementById('descripcionSolicitud').classList.add('is-invalid');
+                return;
+            }
+
+            datosSolicitud.descripcionSolicitud = descripcionSolicitud;
+            
+            // Mostrar siguiente paso
+            document.getElementById('paso4').classList.add('d-none');
+            document.getElementById('paso5').classList.remove('d-none');
+        }
+
+        // Función para validar horas
+        function validarHoras() {
+            const anioMes = document.getElementById('anioMes').value;
+            const cantHorasSolicitadas = document.getElementById('cantHorasSolicitadas').value;
+            
+            if (!anioMes) {
+                document.getElementById('anioMes').classList.add('is-invalid');
+                return;
+            }
+            
+            if (!cantHorasSolicitadas || cantHorasSolicitadas < 1) {
+                document.getElementById('cantHorasSolicitadas').classList.add('is-invalid');
+                return;
+            }
+
+            // Validar que la fecha no sea en el pasado
+            const fechaSeleccionada = new Date(anioMes + '-01');
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            
+            if (fechaSeleccionada < hoy) {
+                document.getElementById('anioMes').classList.add('is-invalid');
+                document.getElementById('anioMes').nextElementSibling.textContent = 'No puede seleccionar una fecha en el pasado.';
+                return;
+            }
+
+            datosSolicitud.anioMes = anioMes;
+            datosSolicitud.cantHorasSolicitadas = cantHorasSolicitadas;
+            
+            // Generar resumen
+            generarResumen();
+            
+            // Mostrar siguiente paso
+            document.getElementById('paso5').classList.add('d-none');
+            document.getElementById('paso6').classList.remove('d-none');
+        }
+
+        // Función para generar el resumen
+        function generarResumen() {
+            const resumen = document.getElementById('resumenSolicitud');
+            
+            // Obtener nombres descriptivos (en realidad vendrían de la API)
+            const nombreConvenio = document.getElementById('convenio').options[document.getElementById('convenio').selectedIndex].text;
+            const nombreTipoServicio = document.getElementById('tipoServicio').options[document.getElementById('tipoServicio').selectedIndex].text;
+            
+            // Formatear fecha
+            const [anio, mes] = datosSolicitud.anioMes.split('-');
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            const mesNombre = meses[parseInt(mes) - 1];
+            
+            resumen.innerHTML = `
+                <p><strong>Cliente:</strong> ${datosSolicitud.nroCliente}</p>
+                <p><strong>Convenio:</strong> ${nombreConvenio}</p>
+                <p><strong>Servicio:</strong> ${datosSolicitud.nombreSolicitud} (${nombreTipoServicio})</p>
+                <p><strong>Descripción:</strong> ${datosSolicitud.descripcionSolicitud}</p>
+                <p><strong>Fecha:</strong> ${mesNombre} ${anio}</p>
+                <p><strong>Horas solicitadas:</strong> ${datosSolicitud.cantHorasSolicitadas}</p>
+            `;
+        }
+
+        // Función para volver a un paso anterior
+        function volverPaso(paso) {
+            document.querySelectorAll('.paso-activo').forEach(p => p.classList.add('d-none'));
+            document.getElementById(`paso${paso}`).classList.remove('d-none');
+        }
+
+        // Manejar el envío del formulario
+        document.getElementById('solicitudServicioForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            if (!document.getElementById('confirmacion').checked) {
+                document.getElementById('confirmacion').classList.add('is-invalid');
+                return;
+            }
+            
+            // Simular envío al servidor (en realidad sería una llamada AJAX)
+            console.log('Datos enviados:', datosSolicitud);
+            
+            // Mostrar modal de éxito
+            document.getElementById('numeroSolicitud').textContent = 'SOL-' + Math.floor(Math.random() * 10000);
+            const modal = new bootstrap.Modal(document.getElementById('exitoModal'));
+            modal.show();
+        });
+
+        // Remover validación al corregir
+        document.querySelectorAll('input, select, textarea').forEach(element => {
+            element.addEventListener('input', function() {
+                this.classList.remove('is-invalid');
+            });
+        });
+    </script>
+</body>
+</html>
