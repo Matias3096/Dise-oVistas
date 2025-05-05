@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Firmar Convenio - Consultoría</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #2c3e50;
+            --secondary-color: #3498db;
+            --success-color: #27ae60;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --light-color: #ecf0f1;
+            --dark-color: #34495e;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .container {
+            max-width: 900px;
+            margin-top: 30px;
+            margin-bottom: 50px;
+        }
+        
+        .card {
+            border-radius: 10px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: none;
+        }
+        
+        .card-header {
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 10px 10px 0 0 !important;
+            padding: 1.5rem;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 0.5rem 1.5rem;
+        }
+        
+        .btn-primary:hover {
+            background-color: #1a252f;
+            border-color: #1a252f;
+        }
+        
+        .btn-success {
+            background-color: var(--success-color);
+            border-color: var(--success-color);
+        }
+        
+        .btn-warning {
+            background-color: var(--warning-color);
+            border-color: var(--warning-color);
+        }
+        
+        .required-field::after {
+            content: " *";
+            color: var(--danger-color);
+        }
+        
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .section-title {
+            color: var(--primary-color);
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--light-color);
+        }
+        
+        .form-control:focus, .form-select:focus {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+        }
+        
+        .invalid-feedback {
+            display: none;
+            color: var(--danger-color);
+        }
+        
+        .is-invalid ~ .invalid-feedback {
+            display: block;
+        }
+        
+        .servicio-item {
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--secondary-color);
+        }
+        
+        .servicio-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.5rem;
+        }
+        
+        .servicio-title {
+            font-weight: bold;
+            color: var(--dark-color);
+        }
+        
+        .btn-remove-servicio {
+            color: var(--danger-color);
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+        }
+        
+        .alert-convenio {
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--secondary-color);
+            border-radius: 0;
+        }
+        
+        .tabla-servicios th {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        
+        .firma-section {
+            border-top: 2px dashed #ccc;
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+        }
+        
+        .firma-preview {
+            border: 1px dashed #ccc;
+            height: 100px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f9f9f9;
+        }
+        
+        .firma-actions {
+            display: flex;
+            gap: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="mb-0"><i class="bi bi-file-earmark-text me-2"></i>Firmar Convenio de Consultoría</h4>
+            </div>
+            <div class="card-body">
+                <form id="firmarConvenioForm">
+                    <!-- Sección 1: Datos del Cliente -->
+                    <div class="form-section">
+                        <h5 class="section-title"><i class="bi bi-building me-2"></i>Datos del Cliente</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombreCliente" class="form-label required-field">Nombre del Cliente</label>
+                                <input type="text" class="form-control" id="nombreCliente" name="nombreCliente" required>
+                                <div class="invalid-feedback">Por favor ingrese el nombre del cliente.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="cuitCliente" class="form-label required-field">CUIT</label>
+                                <input type="text" class="form-control" id="cuitCliente" name="cuitCliente" required>
+                                <div class="invalid-feedback">Por favor ingrese el CUIT del cliente.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="emailCliente" class="form-label required-field">Email</label>
+                                <input type="email" class="form-control" id="emailCliente" name="emailCliente" required>
+                                <div class="invalid-feedback">Por favor ingrese un email válido.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="telefonoCliente" class="form-label">Teléfono</label>
+                                <input type="tel" class="form-control" id="telefonoCliente" name="telefonoCliente">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Sección 2: Datos del Proyecto -->
+                    <div class="form-section">
+                        <h5 class="section-title"><i class="bi bi-folder me-2"></i>Datos del Proyecto</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="nombreProyecto" class="form-label required-field">Nombre del Proyecto</label>
+                                <input type="text" class="form-control" id="nombreProyecto" name="nombreProyecto" required>
+                                <div class="invalid-feedback">Por favor ingrese el nombre del proyecto.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="codigoProyecto" class="form-label">Código del Proyecto</label>
+                                <input type="text" class="form-control" id="codigoProyecto" name="codigoProyecto">
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="descripcionProyecto" class="form-label required-field">Descripción del Proyecto</label>
+                            <textarea class="form-control" id="descripcionProyecto" name="descripcionProyecto" rows="3" required></textarea>
+                            <div class="invalid-feedback">Por favor ingrese una descripción del proyecto.</div>
+                        </div>
+                    </div>
+
+                    <!-- Sección 3: Vigencia del Convenio -->
+                    <div class="form-section">
+                        <h5 class="section-title"><i class="bi bi-calendar-range me-2"></i>Vigencia del Convenio</h5>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="fechaInicio" class="form-label required-field">Fecha de Inicio</label>
+                                <input type="date" class="form-control" id="fechaInicio" name="fechaInicio" required>
+                                <div class="invalid-feedback">Por favor seleccione la fecha de inicio.</div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="fechaFin" class="form-label required-field">Fecha de Finalización</label>
+                                <input type="date" class="form-control" id="fechaFin" name="fechaFin" required>
+                                <div class="invalid-feedback">Por favor seleccione la fecha de finalización.</div>
+                            </div>
+                        </div>
+                        
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle me-2"></i>La consultora debe garantizar la disponibilidad de horas mínimas pactadas durante todo el período del convenio.
+                        </div>
+                    </div>
+
+                    <!-- Sección 4: Servicios Pactados -->
+                    <div class="form-section">
+                        <h5 class="section-title"><i class="bi bi-briefcase me-2"></i>Servicios Pactados</h5>
+                        
+                        <div class="alert alert-convenio mb-3">
+                            <i class="bi bi-info-circle me-2"></i>Defina los tipos de servicio y las horas mensuales mínimas que serán contratadas.
+                        </div>
+                        
+                        <div id="servicios-container">
+                            <!-- Los servicios se agregarán dinámicamente aquí -->
+                        </div>
+                        
+                        <div class="row g-3" id="nuevo-servicio-form">
+                            <div class="col-md-5">
+                                <label for="tipoServicio" class="form-label">Tipo de Servicio</label>
+                                <select class="form-select" id="tipoServicio">
+                                    <option value="" selected disabled>Seleccione un tipo</option>
+                                    <option value="1">Consultoría Estratégica</option>
+                                    <option value="2">Desarrollo de Software</option>
+                                    <option value="3">Análisis de Datos</option>
+                                    <option value="4">Capacitación</option>
+                                    <option value="5">Business Intelligence</option>
+                                </select>
+                            </div>
+                            <div class="col-md-3">
+                                <label for="horasMensuales" class="form-label">Horas Mensuales</label>
+                                <input type="number" class="form-control" id="horasMensuales" min="1" value="20">
+                            </div>
+                            <div class="col-md-4 d-flex align-items-end">
+                                <button type="button" class="btn btn-primary" id="btn-agregar-servicio">
+                                    <i class="bi bi-plus-circle me-1"></i> Agregar Servicio
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="table-responsive mt-3 d-none" id="tabla-servicios-container">
+                            <table class="table tabla-servicios">
+                                <thead>
+                                    <tr>
+                                        <th>Tipo de Servicio</th>
+                                        <th>Horas Mensuales</th>
+                                        <th>Tarifa por Hora</th>
+                                        <th>Costo Mensual Estimado</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody id="tabla-servicios-body">
+                                    <!-- Filas se agregarán dinámicamente -->
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <th colspan="3">Total Mensual</th>
+                                        <th id="total-mensual">$0</th>
+                                        <th></th>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Sección 5: Condiciones Comerciales -->
+                    <div class="form-section">
+                        <h5 class="section-title"><i class="bi bi-file-earmark-text me-2"></i>Condiciones Comerciales</h5>
+                        
+                        <div class="mb-3">
+                            <label for="tarifaBase" class="form-label required-field">Tarifa Base por Hora (USD)</label>
+                            <input type="number" class="form-control" id="tarifaBase" name="tarifaBase" min="0" step="0.01" required>
+                            <div class="invalid-feedback">Por favor ingrese la tarifa base.</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="multaCancelacion" class="form-label required-field">Multa por Cancelación Anticipada (%)</label>
+                            <input type="number" class="form-control" id="multaCancelacion" name="multaCancelacion" min="0" max="100" value="20" required>
+                            <small class="text-muted">Porcentaje aplicable por cada mes comprometido que no se efectivice.</small>
+                            <div class="invalid-feedback">Por favor ingrese un porcentaje válido (0-100).</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="tarifaMinima" class="form-label required-field">Tarifa Fija por Consumo Inferior al Mínimo (USD)</label>
+                            <input type="number" class="form-control" id="tarifaMinima" name="tarifaMinima" min="0" step="0.01" required>
+                            <small class="text-muted">Tarifa fija que se aplica si el consumo de horas es menor al pactado.</small>
+                            <div class="invalid-feedback">Por favor ingrese la tarifa mínima.</div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="terminosCondiciones" class="form-label required-field">Términos y Condiciones</label>
+                            <textarea class="form-control" id="terminosCondiciones" name="terminosCondiciones" rows="4" required>1. La consultora garantiza la disponibilidad de las horas mínimas pactadas cada mes.
+2. El cliente se compromete a consumir como mínimo las horas pactadas.
+3. En caso de cancelación anticipada, aplicará la multa correspondiente.
+4. Los servicios no utilizados no son acumulables a meses posteriores.
+5. La facturación se realizará el último día hábil de cada mes.</textarea>
+                            <div class="invalid-feedback">Por favor ingrese los términos y condiciones.</div>
+                        </div>
+                    </div>
+
+                    <!-- Sección 6: Firma del Convenio -->
+                    <div class="form-section firma-section">
+                        <h5 class="section-title"><i class="bi bi-pen me-2"></i>Firma del Convenio</h5>
+                        
+                        <div class="mb-3">
+                            <label class="form-label required-field">Representante Legal</label>
+                            <div class="firma-preview" id="firma-preview">
+                                <span class="text-muted">Previsualización de firma</span>
+                            </div>
+                            <div class="firma-actions">
+                                <button type="button" class="btn btn-outline-primary" id="btn-dibujar-firma">
+                                    <i class="bi bi-pencil me-1"></i> Dibujar Firma
+                                </button>
+                                <button type="button" class="btn btn-outline-secondary" id="btn-limpiar-firma">
+                                    <i class="bi bi-eraser me-1"></i> Limpiar
+                                </button>
+                                <input type="hidden" id="firmaDigital" name="firmaDigital" required>
+                            </div>
+                            <div class="invalid-feedback">Por favor proporcione su firma.</div>
+                        </div>
+                        
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="aceptoTerminos" required>
+                            <label class="form-check-label" for="aceptoTerminos">
+                                Yo, como representante legal, acepto los términos y condiciones del presente convenio comercial.
+                            </label>
+                            <div class="invalid-feedback">Debe aceptar los términos para continuar.</div>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between">
+                            <button type="button" class="btn btn-secondary" id="btn-cancelar">
+                                <i class="bi bi-x-circle me-1"></i> Cancelar
+                            </button>
+                            <button type="submit" class="btn btn-success">
+                                <i class="bi bi-file-earmark-check me-1"></i> Firmar Convenio
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal para dibujar firma -->
+    <div class="modal fade" id="firmaModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Dibuje su firma</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <canvas id="firmaCanvas" width="700" height="200" style="border:1px solid #ddd; background-color: #f9f9f9;"></canvas>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" id="btn-limpiar-canvas">
+                        <i class="bi bi-eraser me-1"></i> Limpiar
+                    </button>
+                    <button type="button" class="btn btn-primary" id="btn-guardar-firma" data-bs-dismiss="modal">
+                        <i class="bi bi-check-circle me-1"></i> Guardar Firma
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Confirmación -->
+    <div class="modal fade" id="confirmacionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header bg-success text-white">
+                    <h5 class="modal-title"><i class="bi bi-check-circle me-2"></i>Convenio Firmado</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-3">
+                        <i class="bi bi-check-circle-fill text-success" style="font-size: 3rem;"></i>
+                    </div>
+                    <p class="text-center">El convenio ha sido firmado exitosamente y está ahora vigente.</p>
+                    
+                    <div class="card mb-3">
+                        <div class="card-body">
+                            <h6 class="mb-3"><i class="bi bi-file-text me-2"></i>Detalles del Convenio</h6>
+                            <div class="resumen-item">
+                                <span class="resumen-label">Número de Convenio:</span>
+                                <span id="numeroConvenioModal" class="d-block mt-1">CONV-2023-001</span>
+                            </div>
+                            <div class="resumen-item">
+                                <span class="resumen-label">Fecha de Firma:</span>
+                                <span id="fechaFirmaModal" class="d-block mt-1"></span>
+                            </div>
+                            <div class="resumen-item">
+                                <span class="resumen-label">Estado:</span>
+                                <span class="badge bg-success">Vigente</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    <button type="button" class="btn btn-primary" onclick="window.print()">
+                        <i class="bi bi-printer me-1"></i> Imprimir
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Datos de tarifas por tipo de servicio (simulados)
+        const tarifasServicios = {
+            '1': 150,  // Consultoría Estratégica
+            '2': 120,  // Desarrollo de Software
+            '3': 135,  // Análisis de Datos
+            '4': 110,  // Capacitación
+            '5': 145   // Business Intelligence
+        };
+        
+        // Servicios agregados al convenio
+        let serviciosAgregados = [];
+        
+        // Inicializar el canvas para firma
+        let canvas, ctx, painting = false;
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            // Configurar canvas para firma
+            canvas = document.getElementById('firmaCanvas');
+            ctx = canvas.getContext('2d');
+            ctx.lineWidth = 2;
+            ctx.lineCap = 'round';
+            ctx.strokeStyle = '#000';
+            
+            // Eventos para dibujar en el canvas
+            canvas.addEventListener('mousedown', startPainting);
+            canvas.addEventListener('mouseup', stopPainting);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseleave', stopPainting);
+            
+            // Eventos táctiles para dispositivos móviles
+            canvas.addEventListener('touchstart', startPainting);
+            canvas.addEventListener('touchend', stopPainting);
+            canvas.addEventListener('touchmove', draw);
+            
+            // Botón para agregar servicio
+            document.getElementById('btn-agregar-servicio').addEventListener('click', agregarServicio);
+            
+            // Botones para firma
+            document.getElementById('btn-dibujar-firma').addEventListener('click', mostrarModalFirma);
+            document.getElementById('btn-limpiar-firma').addEventListener('click', limpiarFirma);
+            document.getElementById('btn-limpiar-canvas').addEventListener('click', limpiarCanvas);
+            document.getElementById('btn-guardar-firma').addEventListener('click', guardarFirma);
+            
+            // Botón cancelar
+            document.getElementById('btn-cancelar').addEventListener('click', function() {
+                if (confirm('¿Está seguro que desea cancelar la firma del convenio? Todos los datos no guardados se perderán.')) {
+                    window.location.href = 'convenios.html';
+                }
+            });
+            
+            // Validar fechas
+            document.getElementById('fechaInicio').addEventListener('change', validarFechas);
+            document.getElementById('fechaFin').addEventListener('change', validarFechas);
+            
+            // Manejar envío del formulario
+            document.getElementById('firmarConvenioForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                if (validarFormulario()) {
+                    // Simular envío al servidor
+                    setTimeout(() => {
+                        // Mostrar modal de confirmación
+                        const ahora = new Date();
+                        document.getElementById('fechaFirmaModal').textContent = ahora.toLocaleDateString() + ' ' + ahora.toLocaleTimeString();
+                        
+                        const modal = new bootstrap.Modal(document.getElementById('confirmacionModal'));
+                        modal.show();
+                    }, 1000);
+                }
+            });
+            
+            // Inicializar tarifa base con el primer valor
+            document.getElementById('tarifaBase').value = tarifasServicios['1'];
+        });
+        
+        // Funciones para el canvas de firma
+        function startPainting(e) {
+            e.preventDefault();
+            painting = true;
+            draw(e);
+        }
+        
+        function stopPainting() {
+            painting = false;
+            ctx.beginPath();
+        }
+        
+        function draw(e) {
+            if (!painting) return;
+            
+            // Obtener coordenadas (mouse o touch)
+            let clientX, clientY;
+            
+            if (e.type.includes('touch')) {
+                clientX = e.touches[0].clientX - canvas.getBoundingClientRect().left;
+                clientY = e.touches[0].clientY - canvas.getBoundingClientRect().top;
+            } else {
+                clientX = e.clientX - canvas.getBoundingClientRect().left;
+                clientY = e.clientY - canvas.getBoundingClientRect().top;
+            }
+            
+            ctx.lineTo(clientX, clientY);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(clientX, clientY);
+        }
+        
+        function limpiarCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        
+        function mostrarModalFirma() {
+            limpiarCanvas();
+            const modal = new bootstrap.Modal(document.getElementById('firmaModal'));
+            modal.show();
+        }
+        
+        function guardarFirma() {
+            const dataURL = canvas.toDataURL();
+            document.getElementById('firmaDigital').value = dataURL;
+            document.getElementById('firma-preview').innerHTML = `<img src="${dataURL}" style="max-width: 100%; max-height: 80px;">`;
+        }
+        
+        function limpiarFirma() {
+            document.getElementById('firmaDigital').value = '';
+            document.getElementById('firma-preview').innerHTML = '<span class="text-muted">Previsualización de firma</span>';
+        }
+        
+        // Funciones para servicios
+        function agregarServicio() {
+            const tipoServicio = document.getElementById('tipoServicio');
+            const horasMensuales = document.getElementById('horasMensuales');
+            
+            if (!tipoServicio.value) {
+                tipoServicio.classList.add('is-invalid');
+                return;
+            }
+            
+            const tipoServicioText = tipoServicio.options[tipoServicio.selectedIndex].text;
+            const horas = parseInt(horasMensuales.value);
+            const tarifa = tarifasServicios[tipoServicio.value];
+            const costoMensual = horas * tarifa;
+            
+            // Verificar si el servicio ya fue agregado
+            if (serviciosAgregados.some(s => s.id === tipoServicio.value)) {
+                alert('Este tipo de servicio ya ha sido agregado al convenio.');
+                return;
+            }
+            
+            // Agregar a la lista de servicios
+            serviciosAgregados.push({
+                id: tipoServicio.value,
+                nombre: tipoServicioText,
+                horas: horas,
+                tarifa: tarifa,
+                costoMensual: costoMensual
+            });
+            
+            // Actualizar la tabla de servicios
+            actualizarTablaServicios();
+            
+            // Resetear el formulario
+            tipoServicio.value = '';
+            horasMensuales.value = '20';
+        }
+        
+        function actualizarTablaServicios() {
+            const tablaBody = document.getElementById('tabla-servicios-body');
+            tablaBody.innerHTML = '';
+            
+            let totalMensual = 0;
+            
+            serviciosAgregados.forEach((servicio, index) => {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${servicio.nombre}</td>
+                    <td>${servicio.horas}</td>
+                    <td>$${servicio.tarifa}</td>
+                    <td>$${servicio.costoMensual.toLocaleString()}</td>
+                    <td class="text-center">
+                        <button type="button" class="btn btn-sm btn-outline-danger btn-remove-servicio" data-index="${index}">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </td>
+                `;
+                tablaBody.appendChild(row);
+                
+                totalMensual += servicio.costoMensual;
+            });
+            
+            // Actualizar total
+            document.getElementById('total-mensual').textContent = `$${totalMensual.toLocaleString()}`;
+            
+            // Mostrar tabla si hay servicios
+            document.getElementById('tabla-servicios-container').classList.remove('d-none');
+            
+            // Agregar eventos a los botones de eliminar
+            document.querySelectorAll('.btn-remove-servicio').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    serviciosAgregados.splice(index, 1);
+                    actualizarTablaServicios();
+                    
+                    if (serviciosAgregados.length === 0) {
+                        document.getElementById('tabla-servicios-container').classList.add('d-none');
+                    }
+                });
+            });
+        }
+        
+        // Validaciones
+        function validarFechas() {
+            const fechaInicio = new Date(document.getElementById('fechaInicio').value);
+            const fechaFin = new Date(document.getElementById('fechaFin').value);
+            
+            if (fechaInicio && fechaFin && fechaInicio >= fechaFin) {
+                document.getElementById('fechaFin').classList.add('is-invalid');
+                document.getElementById('fechaFin').nextElementSibling.textContent = 'La fecha de fin debe ser posterior a la fecha de inicio.';
+            } else {
+                document.getElementById('fechaFin').classList.remove('is-invalid');
+            }
+        }
+        
+        function validarFormulario() {
+            let valido = true;
+            
+            // Validar campos requeridos
+            document.querySelectorAll('[required]').forEach(field => {
+                if (!field.value) {
+                    field.classList.add('is-invalid');
+                    valido = false;
+                } else {
+                    field.classList.remove('is-invalid');
+                }
+            });
+            
+            // Validar servicios
+            if (serviciosAgregados.length === 0) {
+                alert('Debe agregar al menos un servicio al convenio.');
+                valido = false;
+            }
+            
+            // Validar firma
+            if (!document.getElementById('firmaDigital').value) {
+                document.getElementById('firmaDigital').classList.add('is-invalid');
+                valido = false;
+            }
+            
+            // Validar aceptación de términos
+            if (!document.getElementById('aceptoTerminos').checked) {
+                document.getElementById('aceptoTerminos').classList.add('is-invalid');
+                valido = false;
+            }
+            
+            return valido;
+        }
+        
+        // Remover validación al corregir
+        document.querySelectorAll('input, select, textarea, checkbox').forEach(element => {
+            element.addEventListener('input', function() {
+                this.classList.remove('is-invalid');
+            });
+        });
+    </script>
+</body>
+</html>
