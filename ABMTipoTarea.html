@@ -1,0 +1,660 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABM TipoTarea - Sistema de Consultoría</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #2c3e50;
+            border-bottom: 2px solid #3498db;
+            padding-bottom: 10px;
+        }
+        .form-section {
+            margin-bottom: 25px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+            display: none;
+        }
+        .form-section.active {
+            display: block;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+            box-sizing: border-box;
+        }
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+        .btn-primary {
+            background-color: #3498db;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #2980b9;
+        }
+        .btn-danger {
+            background-color: #e74c3c;
+            color: white;
+        }
+        .btn-danger:hover {
+            background-color: #c0392b;
+        }
+        .btn-secondary {
+            background-color: #95a5a6;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #7f8c8d;
+        }
+        .required:after {
+            content: " *";
+            color: red;
+        }
+        .message {
+            padding: 10px;
+            margin: 15px 0;
+            border-radius: 4px;
+            display: none;
+        }
+        .error {
+            background-color: #fadbd8;
+            color: #e74c3c;
+            border: 1px solid #f5b7b1;
+        }
+        .success {
+            background-color: #d5f5e3;
+            color: #27ae60;
+            border: 1px solid #a3e4d7;
+        }
+        .warning {
+            background-color: #fdebd0;
+            color: #f39c12;
+            border: 1px solid #f8c471;
+        }
+        .tipo-tarea-card {
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 15px;
+            margin-bottom: 15px;
+            background-color: white;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .tipo-tarea-card:hover {
+            border-color: #3498db;
+            background-color: #ebf5fb;
+        }
+        .tipo-tarea-card.selected {
+            border-color: #3498db;
+            background-color: #d6eaf8;
+        }
+        .hidden {
+            display: none;
+        }
+        .nav-buttons {
+            margin-top: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ABM TipoTarea</h1>
+        <p><strong>Actor:</strong> Consultor</p>
+        <p><strong>Descripción:</strong> Gestión de tipos de tareas (Alta, Baja, Modificación)</p>
+        
+        <!-- Sección de selección de operación -->
+        <div id="seleccion-opcion" class="form-section active">
+            <h2>Seleccione operación a realizar</h2>
+            <div class="form-group">
+                <label for="opcion-abm" class="required">Operación:</label>
+                <select id="opcion-abm" class="form-control">
+                    <option value="">-- Seleccione --</option>
+                    <option value="Alta">Alta de TipoTarea</option>
+                    <option value="Baja">Baja de TipoTarea</option>
+                    <option value="Modificacion">Modificación de TipoTarea</option>
+                </select>
+            </div>
+            <div id="opcion-error" class="message error">Por favor seleccione una opción</div>
+            <div class="nav-buttons">
+                <button class="btn btn-primary" onclick="seleccionarOperacion()">Continuar</button>
+            </div>
+        </div>
+        
+        <!-- Sección de Alta -->
+        <div id="alta-section" class="form-section">
+            <h2>Alta de TipoTarea</h2>
+            <div class="form-group">
+                <label for="alta-nombre" class="required">Nombre del Tipo de Tarea:</label>
+                <input type="text" id="alta-nombre" required>
+                <div id="alta-nombre-error" class="message error hidden"></div>
+            </div>
+            <div class="form-group">
+                <label for="alta-descripcion" class="required">Descripción:</label>
+                <textarea id="alta-descripcion" required></textarea>
+                <div id="alta-descripcion-error" class="message error hidden"></div>
+            </div>
+            <div class="form-group">
+                <label for="alta-tiempo" class="required">Tiempo Estimado (horas):</label>
+                <input type="number" id="alta-tiempo" min="1" required>
+                <div id="alta-tiempo-error" class="message error hidden"></div>
+            </div>
+            <div class="form-group">
+                <label for="alta-tipo-servicio" class="required">Tipo de Servicio Relacionado:</label>
+                <select id="alta-tipo-servicio" required>
+                    <option value="">-- Seleccione --</option>
+                    <option value="DEV">Desarrollo</option>
+                    <option value="CONS">Consultoría</option>
+                    <option value="ANAL">Análisis</option>
+                    <option value="CAP">Capacitación</option>
+                </select>
+                <div id="alta-tipo-servicio-error" class="message error hidden"></div>
+            </div>
+            <div id="alta-success" class="message success hidden">Tipo de tarea creado exitosamente!</div>
+            <div class="nav-buttons">
+                <div>
+                    <button class="btn btn-primary" onclick="confirmarAlta()">Confirmar</button>
+                    <button class="btn btn-secondary" onclick="cancelarOperacion()">Cancelar</button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Sección de Baja -->
+        <div id="baja-section" class="form-section">
+            <h2>Baja de TipoTarea</h2>
+            <div class="form-group">
+                <label for="baja-nombre" class="required">Nombre del Tipo de Tarea:</label>
+                <input type="text" id="baja-nombre">
+                <button class="btn btn-primary" style="margin-top: 10px;" onclick="buscarTipoTareaBaja()">Buscar</button>
+                <div id="baja-buscar-error" class="message error hidden"></div>
+            </div>
+            
+            <div id="baja-resultados" class="hidden">
+                <div class="tipo-tarea-card" id="baja-tarea-card">
+                    <h3 id="baja-tarea-nombre"></h3>
+                    <p><strong>Descripción:</strong> <span id="baja-tarea-descripcion"></span></p>
+                    <p><strong>Tiempo Estimado:</strong> <span id="baja-tarea-tiempo"></span> horas</p>
+                    <p><strong>Tipo Servicio:</strong> <span id="baja-tarea-servicio"></span></p>
+                </div>
+                
+                <div class="form-group">
+                    <p>¿Desea dar de baja este tipo de tarea?</p>
+                    <button class="btn btn-danger" onclick="confirmarBaja()">Sí, dar de baja</button>
+                    <button class="btn btn-secondary" onclick="cancelarBaja()">Cancelar</button>
+                </div>
+            </div>
+            
+            <div id="baja-success" class="message success hidden">Tipo de tarea dado de baja exitosamente!</div>
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="cancelarOperacion()">Volver</button>
+            </div>
+        </div>
+        
+        <!-- Sección de Modificación -->
+        <div id="modificacion-section" class="form-section">
+            <h2>Modificación de TipoTarea</h2>
+            <div class="form-group">
+                <label for="mod-nombre-buscar" class="required">Nombre del Tipo de Tarea:</label>
+                <input type="text" id="mod-nombre-buscar">
+                <button class="btn btn-primary" style="margin-top: 10px;" onclick="buscarTipoTareaMod()">Buscar</button>
+                <div id="mod-buscar-error" class="message error hidden"></div>
+            </div>
+            
+            <div id="mod-formulario" class="hidden">
+                <div class="form-group">
+                    <label for="mod-nombre" class="required">Nombre del Tipo de Tarea:</label>
+                    <input type="text" id="mod-nombre" required>
+                    <div id="mod-nombre-error" class="message error hidden"></div>
+                </div>
+                <div class="form-group">
+                    <label for="mod-descripcion" class="required">Descripción:</label>
+                    <textarea id="mod-descripcion" required></textarea>
+                    <div id="mod-descripcion-error" class="message error hidden"></div>
+                </div>
+                <div class="form-group">
+                    <label for="mod-tiempo" class="required">Tiempo Estimado (horas):</label>
+                    <input type="number" id="mod-tiempo" min="1" required>
+                    <div id="mod-tiempo-error" class="message error hidden"></div>
+                </div>
+                <div class="form-group">
+                    <label for="mod-tipo-servicio" class="required">Tipo de Servicio Relacionado:</label>
+                    <select id="mod-tipo-servicio" required>
+                        <option value="">-- Seleccione --</option>
+                        <option value="DEV">Desarrollo</option>
+                        <option value="CONS">Consultoría</option>
+                        <option value="ANAL">Análisis</option>
+                        <option value="CAP">Capacitación</option>
+                    </select>
+                    <div id="mod-tipo-servicio-error" class="message error hidden"></div>
+                </div>
+                
+                <div id="mod-success" class="message success hidden">Tipo de tarea modificado exitosamente!</div>
+                <div class="nav-buttons">
+                    <div>
+                        <button class="btn btn-primary" onclick="confirmarModificacion()">Guardar Cambios</button>
+                        <button class="btn btn-secondary" onclick="cancelarOperacion()">Cancelar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Datos simulados de tipos de tarea
+        const tiposTarea = [
+            {
+                id: 1,
+                nombre: "Desarrollo de módulo",
+                descripcion: "Desarrollo de un módulo específico del sistema",
+                tiempoEstimado: 8,
+                tipoServicio: "DEV",
+                fechaAlta: "2023-01-15",
+                fechaBaja: null
+            },
+            {
+                id: 2,
+                nombre: "Análisis de requerimientos",
+                descripcion: "Reuniones y documentación de requerimientos del sistema",
+                tiempoEstimado: 4,
+                tipoServicio: "ANAL",
+                fechaAlta: "2023-02-20",
+                fechaBaja: null
+            },
+            {
+                id: 3,
+                nombre: "Capacitación de usuarios",
+                descripcion: "Entrenamiento a usuarios finales del sistema",
+                tiempoEstimado: 6,
+                tipoServicio: "CAP",
+                fechaAlta: "2023-03-10",
+                fechaBaja: null
+            }
+        ];
+        
+        // Variables para seguimiento
+        let tareaSeleccionada = null;
+        
+        // Función para mostrar secciones
+        function mostrarSeccion(idSeccion) {
+            document.querySelectorAll('.form-section').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            document.getElementById(idSeccion).classList.add('active');
+        }
+        
+        // Función para seleccionar operación
+        function seleccionarOperacion() {
+            const opcion = document.getElementById('opcion-abm').value;
+            
+            if (!opcion) {
+                document.getElementById('opcion-error').style.display = 'block';
+                return;
+            }
+            
+            document.getElementById('opcion-error').style.display = 'none';
+            
+            switch(opcion) {
+                case 'Alta':
+                    mostrarSeccion('alta-section');
+                    break;
+                case 'Baja':
+                    mostrarSeccion('baja-section');
+                    break;
+                case 'Modificacion':
+                    mostrarSeccion('modificacion-section');
+                    break;
+            }
+        }
+        
+        // Función para cancelar operación
+        function cancelarOperacion() {
+            // Limpiar formularios
+            document.getElementById('alta-nombre').value = '';
+            document.getElementById('alta-descripcion').value = '';
+            document.getElementById('alta-tiempo').value = '';
+            document.getElementById('alta-tipo-servicio').value = '';
+            document.getElementById('alta-success').classList.add('hidden');
+            
+            document.getElementById('baja-nombre').value = '';
+            document.getElementById('baja-resultados').classList.add('hidden');
+            document.getElementById('baja-success').classList.add('hidden');
+            document.getElementById('baja-buscar-error').classList.add('hidden');
+            
+            document.getElementById('mod-nombre-buscar').value = '';
+            document.getElementById('mod-formulario').classList.add('hidden');
+            document.getElementById('mod-success').classList.add('hidden');
+            document.getElementById('mod-buscar-error').classList.add('hidden');
+            
+            // Volver a selección
+            mostrarSeccion('seleccion-opcion');
+            document.getElementById('opcion-abm').value = '';
+        }
+        
+        // Función para confirmar alta
+        function confirmarAlta() {
+            const nombre = document.getElementById('alta-nombre').value;
+            const descripcion = document.getElementById('alta-descripcion').value;
+            const tiempo = document.getElementById('alta-tiempo').value;
+            const tipoServicio = document.getElementById('alta-tipo-servicio').value;
+            
+            // Validaciones
+            let valido = true;
+            
+            if (!nombre) {
+                document.getElementById('alta-nombre-error').textContent = 'Ingrese el nombre del tipo de tarea';
+                document.getElementById('alta-nombre-error').classList.remove('hidden');
+                valido = false;
+            } else {
+                document.getElementById('alta-nombre-error').classList.add('hidden');
+            }
+            
+            if (!descripcion) {
+                document.getElementById('alta-descripcion-error').textContent = 'Ingrese la descripción';
+                document.getElementById('alta-descripcion-error').classList.remove('hidden');
+                valido = false;
+            } else if (descripcion.length > 120) {
+                document.getElementById('alta-descripcion-error').textContent = 'La descripción no puede superar los 120 caracteres';
+                document.getElementById('alta-descripcion-error').classList.remove('hidden');
+                valido = false;
+            } else {
+                document.getElementById('alta-descripcion-error').classList.add('hidden');
+            }
+            
+            if (!tiempo || tiempo <= 0) {
+                document.getElementById('alta-tiempo-error').textContent = 'Ingrese un tiempo estimado válido';
+                document.getElementById('alta-tiempo-error').classList.remove('hidden');
+                valido = false;
+            } else {
+                document.getElementById('alta-tiempo-error').classList.add('hidden');
+            }
+            
+            if (!tipoServicio) {
+                document.getElementById('alta-tipo-servicio-error').textContent = 'Seleccione un tipo de servicio';
+                document.getElementById('alta-tipo-servicio-error').classList.remove('hidden');
+                valido = false;
+            } else {
+                document.getElementById('alta-tipo-servicio-error').classList.add('hidden');
+            }
+            
+            if (!valido) return;
+            
+            // Verificar si ya existe
+            const existe = tiposTarea.some(t => t.nombre.toLowerCase() === nombre.toLowerCase() && t.fechaBaja === null);
+            if (existe) {
+                document.getElementById('alta-nombre-error').textContent = 'Este tipo de tarea ya está registrado';
+                document.getElementById('alta-nombre-error').classList.remove('hidden');
+                return;
+            }
+            
+            // Simular creación
+            const nuevoId = tiposTarea.length > 0 ? Math.max(...tiposTarea.map(t => t.id)) + 1 : 1;
+            const nuevaTarea = {
+                id: nuevoId,
+                nombre,
+                descripcion,
+                tiempoEstimado: tiempo,
+                tipoServicio,
+                fechaAlta: new Date().toISOString().split('T')[0],
+                fechaBaja: null
+            };
+            
+            tiposTarea.push(nuevaTarea);
+            
+            // Mostrar éxito
+            document.getElementById('alta-success').classList.remove('hidden');
+            
+            // Limpiar formulario después de 2 segundos
+            setTimeout(() => {
+                document.getElementById('alta-nombre').value = '';
+                document.getElementById('alta-descripcion').value = '';
+                document.getElementById('alta-tiempo').value = '';
+                document.getElementById('alta-tipo-servicio').value = '';
+                document.getElementById('alta-success').classList.add('hidden');
+                mostrarSeccion('seleccion-opcion');
+                document.getElementById('opcion-abm').value = '';
+            }, 2000);
+        }
+        
+        // Función para buscar tipo de tarea para baja
+        function buscarTipoTareaBaja() {
+            const nombre = document.getElementById('baja-nombre').value;
+            
+            if (!nombre) {
+                document.getElementById('baja-buscar-error').textContent = 'Ingrese el nombre del tipo de tarea';
+                document.getElementById('baja-buscar-error').classList.remove('hidden');
+                return;
+            }
+            
+            const tarea = tiposTarea.find(t => 
+                t.nombre.toLowerCase().includes(nombre.toLowerCase()) && 
+                t.fechaBaja === null
+            );
+            
+            if (!tarea) {
+                document.getElementById('baja-buscar-error').textContent = 'No se encontró un tipo de tarea activo con ese nombre';
+                document.getElementById('baja-buscar-error').classList.remove('hidden');
+                document.getElementById('baja-resultados').classList.add('hidden');
+                return;
+            }
+            
+            document.getElementById('baja-buscar-error').classList.add('hidden');
+            
+            // Mostrar información
+            document.getElementById('baja-tarea-nombre').textContent = tarea.nombre;
+            document.getElementById('baja-tarea-descripcion').textContent = tarea.descripcion;
+            document.getElementById('baja-tarea-tiempo').textContent = tarea.tiempoEstimado;
+            document.getElementById('baja-tarea-servicio').textContent = obtenerNombreTipoServicio(tarea.tipoServicio);
+            
+            tareaSeleccionada = tarea;
+            document.getElementById('baja-resultados').classList.remove('hidden');
+        }
+        
+        // Función para confirmar baja
+        function confirmarBaja() {
+            if (!tareaSeleccionada) return;
+            
+            // Simular baja lógica
+            const index = tiposTarea.findIndex(t => t.id === tareaSeleccionada.id);
+            if (index !== -1) {
+                tiposTarea[index].fechaBaja = new Date().toISOString().split('T')[0];
+            }
+            
+            // Mostrar mensaje de éxito
+            document.getElementById('baja-success').classList.remove('hidden');
+            document.getElementById('baja-resultados').classList.add('hidden');
+            
+            // Limpiar después de 2 segundos
+            setTimeout(() => {
+                document.getElementById('baja-nombre').value = '';
+                document.getElementById('baja-success').classList.add('hidden');
+                mostrarSeccion('seleccion-opcion');
+                document.getElementById('opcion-abm').value = '';
+                tareaSeleccionada = null;
+            }, 2000);
+        }
+        
+        // Función para cancelar baja
+        function cancelarBaja() {
+            document.getElementById('baja-resultados').classList.add('hidden');
+            document.getElementById('baja-nombre').value = '';
+            tareaSeleccionada = null;
+        }
+        
+        // Función para buscar tipo de tarea para modificación
+        function buscarTipoTareaMod() {
+            const nombre = document.getElementById('mod-nombre-buscar').value;
+            
+            if (!nombre) {
+                document.getElementById('mod-buscar-error').textContent = 'Ingrese el nombre del tipo de tarea';
+                document.getElementById('mod-buscar-error').classList.remove('hidden');
+                return;
+            }
+            
+            const tarea = tiposTarea.find(t => 
+                t.nombre.toLowerCase().includes(nombre.toLowerCase()) && 
+                t.fechaBaja === null
+            );
+            
+            if (!tarea) {
+                document.getElementById('mod-buscar-error').textContent = 'No se encontró un tipo de tarea activo con ese nombre';
+                document.getElementById('mod-buscar-error').classList.remove('hidden');
+                document.getElementById('mod-formulario').classList.add('hidden');
+                return;
+            }
+            
+            document.getElementById('mod-buscar-error').classList.add('hidden');
+            
+            // Llenar formulario
+            document.getElementById('mod-nombre').value = tarea.nombre;
+            document.getElementById('mod-descripcion').value = tarea.descripcion;
+            document.getElementById('mod-tiempo').value = tarea.tiempoEstimado;
+            document.getElementById('mod-tipo-servicio').value = tarea.tipoServicio;
+            
+            tareaSeleccionada = tarea;
+            document.getElementById('mod-formulario').classList.remove('hidden');
+        }
+        
+        // Función para confirmar modificación
+        function confirmarModificacion() {
+            if (!tareaSeleccionada) return;
+            
+            const nombre = document.getElementById('mod-nombre').value;
+            const descripcion = document.getElementById('mod-descripcion').value;
+            const tiempo = document.getElementById('mod-tiempo').value;
+            const tipoServicio = document.getElementById('mod-tipo-servicio').value;
+            
+            // Validaciones
+            let valido = true;
+            
+            if (!nombre) {
+                document.getElementById('mod-nombre-error').textContent = 'Ingrese el nombre del tipo de tarea';
+                document.getElementById('mod-nombre-error').classList.remove('hidden');
+                valido = false;
+            } else {
+                document.getElementById('mod-nombre-error').classList.add('hidden');
+            }
+            
+            if (!descripcion) {
+                document.getElementById('mod-descripcion-error').textContent = 'Ingrese la descripción';
+                document.getElementById('mod-descripcion-error').classList.remove('hidden');
+                valido = false;
+            } else if (descripcion.length > 120) {
+                document.getElementById('mod-descripcion-error').textContent = 'La descripción no puede superar los 120 caracteres';
+                document.getElementById('mod-descripcion-error').classList.remove('hidden');
+                valido = false;
+            } else {
+                document.getElementById('mod-descripcion-error').classList.add('hidden');
+            }
+            
+            if (!tiempo || tiempo <= 0) {
+                document.getElementById('mod-tiempo-error').textContent = 'Ingrese un tiempo estimado válido';
+                document.getElementById('mod-tiempo-error').classList.remove('hidden');
+                valido = false;
+            } else {
+                document.getElementById('mod-tiempo-error').classList.add('hidden');
+            }
+            
+            if (!tipoServicio) {
+                document.getElementById('mod-tipo-servicio-error').textContent = 'Seleccione un tipo de servicio';
+                document.getElementById('mod-tipo-servicio-error').classList.remove('hidden');
+                valido = false;
+            } else {
+                document.getElementById('mod-tipo-servicio-error').classList.add('hidden');
+            }
+            
+            if (!valido) return;
+            
+            // Verificar si el nuevo nombre ya existe (excepto para este registro)
+            const nombreExiste = tiposTarea.some(t => 
+                t.id !== tareaSeleccionada.id && 
+                t.nombre.toLowerCase() === nombre.toLowerCase() && 
+                t.fechaBaja === null
+            );
+            
+            if (nombreExiste) {
+                document.getElementById('mod-nombre-error').textContent = 'Este nombre de tipo de tarea ya está en uso';
+                document.getElementById('mod-nombre-error').classList.remove('hidden');
+                return;
+            }
+            
+            // Simular modificación
+            const index = tiposTarea.findIndex(t => t.id === tareaSeleccionada.id);
+            if (index !== -1) {
+                tiposTarea[index].nombre = nombre;
+                tiposTarea[index].descripcion = descripcion;
+                tiposTarea[index].tiempoEstimado = tiempo;
+                tiposTarea[index].tipoServicio = tipoServicio;
+            }
+            
+            // Mostrar éxito
+            document.getElementById('mod-success').classList.remove('hidden');
+            
+            // Limpiar después de 2 segundos
+            setTimeout(() => {
+                document.getElementById('mod-nombre-buscar').value = '';
+                document.getElementById('mod-formulario').classList.add('hidden');
+                document.getElementById('mod-success').classList.add('hidden');
+                mostrarSeccion('seleccion-opcion');
+                document.getElementById('opcion-abm').value = '';
+                tareaSeleccionada = null;
+            }, 2000);
+        }
+        
+        // Función auxiliar para obtener nombre de tipo de servicio
+        function obtenerNombreTipoServicio(codigo) {
+            const tipos = {
+                'DEV': 'Desarrollo',
+                'CONS': 'Consultoría',
+                'ANAL': 'Análisis',
+                'CAP': 'Capacitación'
+            };
+            return tipos[codigo] || codigo;
+        }
+    </script>
+</body>
+</html>

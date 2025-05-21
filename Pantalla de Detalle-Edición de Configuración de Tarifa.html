@@ -1,0 +1,49 @@
+<div class="container">
+  <h1>Configuración de Tarifa <small>CT-001 - Servicio Básico</small></h1>
+  
+  <div class="config-header">
+    <div class="header-info">
+      <div><strong>Estado:</strong> <span class="badge badge-warning">Provisoria</span></div>
+      <div><strong>Fecha Inicio:</strong> <input type="date" value="2023-01-01"></div>
+      <div><strong>Fecha Fin Vigencia:</strong> <input type="date"></div>
+    </div>
+    
+    <div class="header-actions">
+      <button class="btn btn-primary">Guardar</button>
+      <button class="btn btn-secondary">Cancelar</button>
+      <button class="btn btn-success">Verificar</button>
+    </div>
+  </div>
+  
+  <div class="config-details">
+    <div class="form-group">
+      <label for="multa-cancelacion">Multa por Cancelación:</label>
+      <input type="number" id="multa-cancelacion" value="500">
+    </div>
+    
+    <h3>Renglones de Tarifa</h3>
+    <table class="renglones-table">
+      <thead>
+        <tr>
+          <th>N° Orden</th>
+          <th>Tarifa Base</th>
+          <th>Castigo Consumo Inferior</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td>
+          <td><input type="number" value="1500"></td>
+          <td><input type="number" value="0.1"></td>
+          <td>
+            <button class="btn btn-sm btn-danger">Eliminar</button>
+          </td>
+        </tr>
+        <!-- Más renglones -->
+      </tbody>
+    </table>
+    
+    <button class="btn btn-primary">Agregar Renglón</button>
+  </div>
+</div>

@@ -1,0 +1,58 @@
+<div class="container">
+  <h1>Configuración de Tarifas</h1>
+  
+  <!-- Filtros de búsqueda -->
+  <div class="filters">
+    <div class="filter-item">
+      <label for="tipo-servicio">Tipo de Servicio:</label>
+      <select id="tipo-servicio">
+        <option value="">Todos</option>
+        <!-- Opciones dinámicas de tipos de servicio -->
+      </select>
+    </div>
+    
+    <div class="filter-item">
+      <label for="estado">Estado:</label>
+      <select id="estado">
+        <option value="vigente">Vigente</option>
+        <option value="provisoria">Provisoria</option>
+        <option value="historica">Histórica</option>
+        <option value="">Todos</option>
+      </select>
+    </div>
+    
+    <button class="btn btn-primary">Buscar</button>
+    <button class="btn btn-secondary">Nueva Configuración</button>
+  </div>
+  
+  <!-- Tabla de configuraciones -->
+  <table class="config-table">
+    <thead>
+      <tr>
+        <th>N° Config.</th>
+        <th>Tipo Servicio</th>
+        <th>Fecha Inicio</th>
+        <th>Fecha Fin Vigencia</th>
+        <th>Estado</th>
+        <th>Multa Cancelación</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Ejemplo de fila -->
+      <tr>
+        <td>CT-001</td>
+        <td>Servicio Básico</td>
+        <td>01/01/2023</td>
+        <td>31/12/2023</td>
+        <td><span class="badge badge-success">Vigente</span></td>
+        <td>$500</td>
+        <td>
+          <button class="btn btn-sm btn-info">Ver</button>
+          <button class="btn btn-sm btn-warning">Modificar</button>
+        </td>
+      </tr>
+      <!-- Más filas dinámicas -->
+    </tbody>
+  </table>
+</div>

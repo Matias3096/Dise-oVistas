@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Facturación Mensual</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-6 font-sans">
+
+  <div class="max-w-6xl mx-auto bg-white rounded-xl shadow-md p-8">
+    <h1 class="text-3xl font-bold mb-6 text-blue-800">Facturación Mensual</h1>
+
+    <!-- Fecha y Botón -->
+    <div class="flex items-center justify-between mb-6">
+      <div>
+        <label for="mes" class="block text-sm font-medium text-gray-700">Mes a facturar</label>
+        <input type="month" id="mes" name="mes" class="mt-1 p-2 border border-gray-300 rounded-md" />
+      </div>
+      <button class="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 mt-6">
+        Ejecutar Facturación
+      </button>
+    </div>
+
+    <!-- Resumen del Proceso -->
+    <div class="bg-gray-50 border-l-4 border-blue-500 p-4 mb-6">
+      <p class="text-sm text-gray-600">Facturación de servicios aprobados del mes seleccionado. Las facturas se enviarán automáticamente a los clientes por correo electrónico.</p>
+    </div>
+
+    <!-- Tabla de Facturas Generadas -->
+    <h2 class="text-xl font-semibold mb-4">Facturas generadas</h2>
+    <table class="min-w-full divide-y divide-gray-200 border rounded-md overflow-hidden">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Cliente</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Proyecto</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Monto total</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Estado</th>
+          <th class="px-4 py-2 text-left text-sm font-semibold text-gray-600">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200 bg-white">
+        <tr>
+          <td class="px-4 py-2 text-sm">Empresa XYZ</td>
+          <td class="px-4 py-2 text-sm">Implementación CRM</td>
+          <td class="px-4 py-2 text-sm">$15.200</td>
+          <td class="px-4 py-2 text-sm text-green-600 font-medium">Enviada</td>
+          <td class="px-4 py-2 text-sm">
+            <a href="#" class="text-blue-600 hover:underline mr-2">Ver</a>
+            <a href="#" class="text-gray-600 hover:underline">Reenviar</a>
+          </td>
+        </tr>
+        <!-- Más filas... -->
+      </tbody>
+    </table>
+
+    <!-- Estado del proceso -->
+    <div class="mt-6">
+      <p class="text-sm text-gray-500">Última ejecución: 30/04/2025 – 12 facturas generadas.</p>
+    </div>
+  </div>
+</body>
+</html>
